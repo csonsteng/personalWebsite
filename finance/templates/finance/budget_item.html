@@ -1,0 +1,7 @@
+{% if item %}
+  <ul>
+    <li>{{ item.name }} : {{item.value}}</li>
+  </ul>
+{% else %}
+  <p>Error: Not a valid budget number</p>
+{% endif %}
