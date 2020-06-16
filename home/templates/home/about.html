@@ -1,0 +1,68 @@
+{% extends 'home/base.html' %}
+{% block style %}
+    #profile-picture{
+        max-width:450px;
+        max-height:75vh;
+        width: auto;
+        height: auto;
+        border-radius: 100px;
+    }
+
+    #about-text{
+        max-width:600px;
+        width: auto;
+    }
+{% endblock style %}
+{% block content %}
+
+    <div><img src='/static/profpic.jpg' alt='Picture of Chloe' id='profile-picture'></div>
+    <div id='about-text'>
+        <div id='page-heading'>About Me</div>
+        <p>
+            Hello! My name is Chloe Sonsteng which I guess is evident by the name in the top left.
+            Also, you probably already know my name or else you wouldn't have found this site. I am a 28 year old
+            transgender woman from Portland, Oregon. I am also an aspiring developer.
+        </p>
+        <p>
+            I'm going to jump into a bit of my professional history, and then circle back to my development credentials.
+            In 2014, I graduated with a B.S. in Mechanical Engineering from Oregon State University. While in school, I applied,
+            and was accepted into the <a href='https://www.mecopinc.org/' target='_blank'>MECOP</a> program. This provided me the opportunity to
+            work at two separate six month internships prior to graduation.
+        </p>
+        <p>
+            My first internshipwas at <a href='https://www.pccaero.com/' target='_blank'>PCC Aerostructures</a> from April 2012 to September of
+            the same year. Here I worked more in a manufacturing engineering role, facilitating the manufacturing of industrial
+            turbines. During this time, I also found the opportunity to teach myself Visual Basic for Applications (VBA).
+        </p>
+        <p>
+            My second internship took place in a similar timeframe, but one year later in 2013. This was at
+            <a href='https://daimler-trucksnorthamerica.com/' target='_blank'>Daimler Trucks North America</a>. At Daimler I worked in digital mockup
+            to ensure that all design aspects of a truck properly interfaced, and that enough clearance existed between discrete parts to
+            account for road vibrations, and translation of suspension. I was able to leverage my VBA knowledge, and further VBS to automate
+            many of the clearance analyses necessary in this role.
+        </p>
+
+        <p>
+            Since graduation, I have been continuously employed at <a href='https://www.altechaero.com' target='_blank'>Altech Aerospace</a>,
+            although my role has changed several times. Altech primarily performs design structural analysis of aircraft repairs and modifications.
+            When I began my stint at Altech, I was one of two employees. It was the owner/president, one structural engineer, and me. I was given the
+            title of Design Engineer; however, due to limited design work much of my responsibilities were similar to those of a structural engineer.
+            I also was heavily utilized for my VBA expertise. In the summer of 2015, I started balancing these responsibilities with those of a liaison
+            engineer. Over the course of a year, I alternated between being in Phoenix and Portland every six months. While in Phoenix, I worked on site
+            at a Maintenance, Repair, Overhaul facility to oversee freighter and water bomber conversions of aircract. These duties were to document deviations
+            and issue appropriate repair instructions.
+        </p>
+        <p>
+            In the fall of 2016 Altech was temporarily acquired by <a href='https://www.precisionaircraft.com/'>Precision Aircraft Solutions</a>.
+            In the summer of 2018 the two companies parted ways. While a part of Precision, I administrated the Product Data Management system for
+            their 757 frieghter conversion. I also worked as part of the design team to revise drawings as necessary. Upon separation, my roles resumed
+            to those of a structural engineer and design engineer. I also adopted all IT responsibilities at Altech, in addition to continued VBA work.
+        </p>
+        <p>
+            In the summer of 2019, I pitched a web-based integrated stress analysis suite. At the time, all stress analysis tools were built in Excel
+            using VBA which was not necessarily always the best solution. My pitch was accepted, and I began working on said suite. It is written primarily
+            in Python using the Django frameworks with HTML/CSS/JS being used for the front end. This is a similar architecture to this site right here.
+            The site is internal to Altech, and cannot be shared here; however, it has been recieved with nothing less than glowing reviews.
+        </p>
+    </div>
+{% endblock content %}

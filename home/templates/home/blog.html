@@ -1,0 +1,71 @@
+{% extends 'home/base.html' %}
+{% block style %}
+
+    .blog-container{
+        display: flex;
+        width:100%;
+        flex-flow: row wrap-reverse;
+        justify-content: space-around;
+        align-items: stretch;
+        align-content: stretch;
+        padding-top: 20px;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .blog-picture{
+        max-width:450px;
+        max-height:75vh;
+        width: auto;
+        height: auto;
+        border-radius: 100px;
+        grid-column:1;
+    }
+
+    .blog-text{
+        max-width:600px;
+        width: auto;
+        grid-column:2;
+    }
+
+    .blog-heading{
+        font-size:2em;
+    }
+
+    .blog-grid{
+        display: grid;
+        grid-template-columns; auto auto;
+        justify-content: space-around;
+        align-content: start;
+        grid-gap: 20px;
+    }
+
+    .blog-item{
+        display: contents;
+    }
+
+
+{% endblock style %}
+{% block content %}
+    <div>
+    {% if blogs %}
+        <div class='blog-grid'>
+        {% for blog in blogs %}
+                {% if blog.img %}
+                    <img src='{{ blog.img.url }}' alt='{{ blog.title }}_picture' class='blog-picture'>
+                {% else %}
+                <div></div>
+                {% endif %}
+                <div class='blog-text'>
+                    <span class='blog-heading'>{{ blog.title }}</span><br>
+                    <span class='blog-date'>{{ blog.date }}</span><br><br>
+                    <div>
+                        {{ blog.body | linebreaksbr}}
+                    </div>
+                    <hr>
+                </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+    </div>
+{% endblock content %}

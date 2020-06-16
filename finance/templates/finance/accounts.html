@@ -1,9 +1,63 @@
-{% if account_list %}
-  <ul>
-  {% for account in account_list %}
-    <li>{{ account.name }} : {{account.value}}</li>
-  {% endfor %}
-  </ul>
-{% else %}
-  <p>There are no open accounts.</p>
-{% endif %}
+{% block content %}
+    <h1>Accounts</h1>
+    <strong>Savings</strong>
+    {% if savingsList %}
+      <ul>
+      {% for a in savingsList %}
+        <li>{{ a.aName }} : {{a.lastDatum.value}}</li>
+      {% endfor %}
+      </ul>
+    {% else %}
+    <br>
+    {% endif %}
+    <strong>Investments</strong>
+    {% if investmentList %}
+      <ul>
+      {% for a in investmentList %}
+        <li>{{ a.aName }} : {{a.lastDatum.value}}</li>
+      {% endfor %}
+      </ul>
+    {% else %}
+    <br>
+    {% endif %}
+    <strong>Credits</strong>
+    {% if creditList %}
+      <ul>
+      {% for a in creditList %}
+        <li>{{ a.aName }} : {{a.lastDatum.value}}</li>
+      {% endfor %}
+      </ul>
+    {% else %}
+    <br>
+    {% endif %}
+    <h2>Add Account</h2>
+    <form target='accounts' method='POST'>
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>Name</td>
+                <td><input type='text' name='aName' id='aName' size='20' autocomplete='off'></td>
+            </tr>
+            <tr>
+                <td>Value</td>
+                <td><input type='text' name='value' id='value' size='20' autocomplete='off'></td>
+            </tr>
+            <tr>
+                <td>Interest</td>
+                <td><input type='text' name='interest' id='interest' size='20' autocomplete='off'></td>
+            </tr>
+            <tr>
+                <td>Type</td><td></td>
+            </tr>
+            {% for t in accountTypes %}
+            <tr>
+                <td></td>
+                <td>
+                        <input type='radio' name='type' value='{{ t.pk }}'>{{ t.tName }}</option>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <input type='submit' value='Add'>
+    </form>
+{% endblock content %}

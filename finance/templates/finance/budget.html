@@ -1,0 +1,273 @@
+{% extends 'finance/base.html' %}
+{% block style %}
+.categoryHeader{
+    text-align: center;
+    font-size: 1.25em;
+}
+
+#budgetTable{
+    margin:auto;
+}
+{% endblock style %}
+{% block content %}
+<!-- New Category Modal -->
+<div id='categoryModal' class='modal'>
+  <!-- Modal content -->
+    <div class="modal-content">
+    <span class='close'>&times;</span>
+    <h2>New Category</h2>
+    <table style='margin:auto'>
+        <tr>
+            <td>Name:</td>
+            <td><input type='text' id='newCategoryName'></td>
+        </tr>
+    </table><br>
+    <button type='button' class='button' id='cancelNewCategory'>Cancel</button>
+    <button type='button' class='button' id='addNewCategory'>Confirm</button>
+    </div>
+</div>
+<!-- Add Item Modal -->
+<div id="itemModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Add Budget Item</h2>
+    <table style='margin:auto'>
+        <tr>
+            <td>Name:</td>
+            <td><input type='text' id='newItemName'></td>
+        </tr>
+        <tr>
+            <td>Value:</td>
+            <td><input type='text' pattern='[0-9]*.?[0-9]+' id='newItemValue'></td>
+        </tr>
+        <tr>
+            <td>Period:</td>
+            <td>
+                <select id='newItemPeriod'>
+                {% for s in schedules %}
+                    <option value='{{ s.period }}'>{{ s.schedule_name }}</option>
+                {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Category:</td>
+            <td>
+                <select id='newItemCategory'>
+                    {% if categories %}
+                    {% for c in categories %}
+                        <option value='{{ c.pk }}'>{{ c.category_name }}</option>
+                    {% endfor %}
+                    {% else %}
+                        <option value='Income'>Income</option>
+                        <option value='Essential'>Essential</option>
+                    {% endif %}
+
+                    <option value='new'>New Category</option>
+                </select>
+            </td>
+        </tr>
+    </table><br>
+    <button type='button' class='button' id='cancelAddition'>Cancel</button>
+    <button type='button' class='button' id='confirmAddition'>Confirm</button>
+  </div>
+
+</div>
+    <h1>Budget</h1>
+    <form method='post' target='/finance/budget'>
+        {% csrf_token %}
+        {% if budget %}
+        <input type='hidden' id='budgetID' name='budgetID' value='{{ budget.pk }}'>
+        {% endif %}
+        <input type='hidden' id='itemCount' name='itemCount' value='0'>
+        <table id=budgetTable>
+            <tr>
+                <td></td>
+                <td>Name</td>
+                <td>Amount</td>
+                <td>Period</td>
+                <td>Category</td>
+            </tr>
+            <tbody>
+            </tbody>
+        </table>
+        <button id='addItem' type='button' class='button'>Add</button>
+        <input type='submit' value='Save'>
+    </form>
+    <br>
+    <span>Display Period: <select id='displayPeriod'>
+        {% for s in schedules %}
+            <option value='{{ s.period }}'>{{ s.schedule_name }}</option>
+        {% endfor %}
+    </select></span>
+    <br>
+    <table id='sumsTable' style='margin:auto;'>
+        <tr>
+            <th>Category</th>
+            <th>Total</th>
+        </tr>
+    </table>
+</div>
+{% endblock content %}
+
+
+{% block scripts %}
+        <script>
+        var itemCount = document.getElementById('itemCount');
+            // Get the modal
+        var modal = document.getElementById("itemModal");
+        var categoryModal = document.getElementById('categoryModal');
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("addItem");
+
+        // Get the <span> element that closes the modal
+        var spans = document.getElementsByClassName("close");
+
+        // When the user clicks on the button, open the modal
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        for(var i=0; i < spans.length; i++){
+            spans[i].onclick = function() {
+                modal.style.display = "none";
+                categoryModal.style.display = "none";
+            }
+        }
+
+        var periods = {};
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            closeModal();
+          }else if(event.target == categoryModal){
+              closeCategoryModal();
+          }
+        }
+
+        function closeModal(){
+            modal.style.display = "none";
+            document.getElementById('newItemName').value = '';
+            document.getElementById('newItemValue').value = '';
+            document.getElementById('newItemPeriod').value = '';
+        }
+
+        function closeCategoryModal(){
+            categoryModal.style.display = "none";
+            document.getElementById('newCategoryName').value = ''
+        }
+
+        function confirmAddition(){
+            var itemCategory = document.getElementById('newItemCategory').value;
+            if(itemCategory=='new'){
+                closeModal();
+                categoryModal.style.display = 'block';
+            }else{
+                addToCategory(itemCategory);
+            }
+        }
+        var displayPeriod = document.getElementById('displayPeriod');
+        displayPeriod.addEventListener('change',updateCategoryTable);
+        function updateCategoryTable(){
+            console.log('change periods');
+        }
+        var categories = []
+        function addToCategory(itemCategory){
+            console.log(categories);
+            var itemName = document.getElementById('newItemName').value;
+            var itemValue = document.getElementById('newItemValue').value;
+            var itemPeriod = document.getElementById('newItemPeriod').value;
+            if(categories.includes(itemCategory)){
+                var categoryValueDisplay = document.getElementById(itemCategory.concat('_value'));
+                var categoryValue = parseFloat(categoryValueDisplay.innerHTML) + parseFloat(itemValue);
+                categoryValueDisplay.innerHTML = categoryValue;
+            }else{
+                var categoryTable = document.getElementById('sumsTable');
+                var row = categoryTable.insertRow(-1);
+                var cell = row.insertCell(-1);
+                cell.innerHTML = itemCategory;
+                var cell = row.insertCell(-1);
+                cell.id = itemCategory.concat('_value');
+                cell.innerHTML = itemValue;
+                categories.push(itemCategory);
+            }
+
+            addItem(itemName, itemValue, itemPeriod, itemCategory);
+            closeModal();
+
+        }
+        table = document.getElementById('budgetTable');
+        {% for s in schedules %}
+            periods['{{ s.period }}'] = '{{ s.schedule_name }}';
+        {% endfor %}
+
+        function addItem(itemName, itemValue, itemPeriod, itemCategory){
+            var itemNumber = itemCount.value;
+            var r = table.insertRow(-1);
+            items = [['buttons'], [itemName, 'iName'], [itemValue, 'iValue'], [periods[itemPeriod],'iPeriod'], [itemCategory,'iCategory']];
+            items.forEach(addCell);
+
+            function addCell(val){
+                var c = r.insertCell(-1);
+                c.innerHTML = val[0];
+                if(val[0] != 'buttons'){
+                    var inp = document.createElement('input');
+                    inp.type = 'hidden';
+                    inp.id = val[1].concat('_',itemNumber);
+                    inp.name = inp.id;
+                    inp.value = val[0];
+                    c.appendChild(inp);
+                }
+            }
+
+            itemCount.value = parseInt(itemNumber) + 1;
+        }
+
+        function loadItems(){
+            {% for item in items %}
+                document.getElementById('newItemName').value = '{{ item.item_name }}';
+                document.getElementById('newItemValue').value = '{{ item.value }}';
+                document.getElementById('newItemPeriod').value = '{{ item.schedule.period }}';
+                addToCategory('{{ item.category }}');
+            {% endfor %}
+        }
+
+        {% if budget %}
+            loadItems();
+        {% endif %}
+
+
+        document.getElementById('confirmAddition').addEventListener('click',confirmAddition);
+        document.getElementById('cancelAddition').addEventListener('click',closeModal);
+
+        function addCategory(){
+            var newCategory = document.getElementById('newCategoryName').value;
+            var select = document.getElementById('newItemCategory');
+            var newOption = document.createElement('option');
+            newOption.value = newCategory;
+            newOption.innerHTML = newCategory;
+            select.insertBefore(newOption, select.childNodes[0]);
+            addToCategory(newCategory);
+            closeCategoryModal();
+        }
+
+        function cancelCategory(){
+            closeCategoryModal();
+            modal.style.display = "block";
+        }
+
+        document.getElementById('addNewCategory').addEventListener('click', addCategory);
+        document.getElementById('cancelNewCategory').addEventListener('click', cancelCategory);
+
+
+
+
+
+        //document.getElementById('addItem').addEventListener('click',addItem);
+
+    </script>
+{% endblock scripts %}

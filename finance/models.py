@@ -1,37 +1,56 @@
 from django.db import models
+from django.contrib.auth.models import User
+
+class Budget(models.Model):
+    budget_name = models.CharField(max_length=200)
 
 class BudgetCategory(models.Model):
     category_name = models.CharField(max_length=200)
+    budget = models.ForeignKey(Budget, on_delete=models.CASCADE, null=True)
     def __str__(self):
         return self.category_name
 
 class BudgetSchedule(models.Model):
     schedule_name = models.CharField(max_length=200)
-    times_per_year = models.DecimalField(max_digits=10, decimal_places=6)
-    times_per_month = models.DecimalField(max_digits=10, decimal_places=6)
-    times_per_week = models.DecimalField(max_digits=10, decimal_places=6)
-    times_per_day = models.DecimalField(max_digits=10, decimal_places=6)
     period = models.IntegerField(default=0)
+    def times_per_year(self):
+        return self.period
+    def times_per_month(self):
+        return self.period/12
+    def times_per_week(self):
+        return self.period/52
+    def times_per_day(self):
+        return self.period/365
+
     def __str__(self):
         return self.schedule_name
 
 class BudgetItem(models.Model):
     item_name = models.CharField(max_length=200)
-    category = models.ForeignKey(BudgetCategory, on_delete=models.CASCADE)  #THESE CAN'T CASCADE FIGURE OUT HOW TO USE SET_DEFAULT AND SET A DEFAULT
+    category = models.ForeignKey(BudgetCategory, on_delete=models.CASCADE, null=True)
     value = models.DecimalField(max_digits=10, decimal_places=2)
-    schedule = models.ForeignKey(BudgetSchedule, on_delete=models.CASCADE)
+    schedule = models.ForeignKey(BudgetSchedule, on_delete=models.CASCADE, null=True)
     def __str__(self):
         return self.item_name
 
 class AccountType(models.Model):
-    type_name = models.CharField(max_length=200)
+    tName = models.CharField(max_length=200)
     def __str__(self):
-        return self.type_name
+        return self.tName
 
 class Account(models.Model):
-    account_name = models.CharField(max_length=200)
+    aName = models.CharField(max_length=200)
     type = models.ForeignKey(AccountType, on_delete=models.CASCADE)
-    account_value = models.DecimalField(max_digits=15,decimal_places=2)
-    interest_rate = models.DecimalField(max_digits=7,decimal_places=4)
+    lastDatum = models.ForeignKey('AccountData', on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     def __str__(self):
-        return self.account_name
+        return self.aName
+
+class AccountData(models.Model):
+    refAccount = models.ForeignKey(Account, on_delete=models.CASCADE)
+    value = models.DecimalField(max_digits=15,decimal_places=2)
+    iRate = models.DecimalField(max_digits=7,decimal_places=4)
+    date = models.DateField(auto_now=True)
+    def __str__(self):
+        return str(self.date) + " : " + str(self.value)
+

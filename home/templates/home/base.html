@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block tabHeading %}Chloe Sonsteng{% endblock tabHeading %}</title>
+        <style>
+
+            *{
+                color: #333;
+	            box-sizing: border-box;
+            }
+
+            body{
+                background: #e1bebe;
+                margin: 0px;
+            }
+
+            .header{
+                display: flex;
+                border-bottom: solid 3px #f29fb8;
+                height: 80px;
+                flex-flow: row nowrap;
+                justify-content: space-between;
+                align-items: stretch;
+                align-content: stretch;
+                padding-left: 10px;
+                padding-right: 30px;
+                padding-top: 10px;
+                padding-bottom: 5px;
+                margin-left: 25px;
+                margin-right:25px;
+            }
+
+            .body-container{
+                display: flex;
+                width:100%;
+                flex-flow: row wrap;
+                justify-content: space-around;
+                align-items: stretch;
+                align-content: stretch;
+                padding-top: 20px;
+                padding-left: 30px;
+                padding-right: 30px;
+            }
+
+            .nav-container{
+                display: flex;
+                flex-flow: row nowrap;
+                justify-content: flex-end;
+                align-items: flex-end;
+                align-content: flex-end;
+                list-style-type:none;
+                height: 100%;
+                margin-top: 0px;
+            }
+
+            .heading{
+                font-size:3em;
+            }
+
+            .nav-item{
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            .nav-selected{
+                font-weight: bold;
+            }
+
+            #page-heading{
+                text-align: left;
+                font-size: 1.5em;
+                padding-top: 5px;
+            }
+
+
+            {% block style %}
+
+            {% endblock style %}
+        </style>
+    </head>
+    <body>
+        {% load static %}
+        <div class='header'>
+            <span class='heading'>Chloe Sonsteng</span>
+            <ul class='nav-container'>
+                <li class='nav-item'><a href='/home/' id='js-nav-'>Home</a></li>
+                <li class='nav-item'><a href='/home/projects/' id='js-nav-projects'>Projects</a></li>
+                <li class='nav-item'><a href='/home/blog/' id='js-nav-blog'>Blog</a></li>
+                <li class='nav-item'><a href='/home/about/' id='js-nav-about'>About</a></li>
+                <li class='nav-item'><a href='/home/contact/' id='js-nav-contact'>Contact</a></li>
+            </ul>
+        </div>
+        <div class='body-container'>
+        {% block content %}
+
+        {% endblock content %}
+        </div>
+        <script>
+            function setActiveLinkBold(){
+                var url = window.location.href;
+                var splits = url.split('/');
+                var page = splits[splits.length-2];
+                if(page=='home'){
+                    page = '';
+                }
+                var link = document.getElementById('js-nav-'.concat(page));
+                link.classList.add('nav-selected');
+            }
+            setActiveLinkBold();
+        </script>
+        {% block scripts %}
+
+
+        {% endblock scripts %}
+    </body>
+</html>
+

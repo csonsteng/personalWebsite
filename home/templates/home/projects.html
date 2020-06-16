@@ -1,0 +1,52 @@
+{% extends 'home/base.html' %}
+{% load static %}
+{% block style %}
+.hollywoodSquaresContainer{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    width: 80%;
+}
+
+.hollywoodSquare{
+    width: 25%;
+    margin: auto;
+    min-height: 150px;
+    border: solid grey 1px;
+    position: relative;
+    box-sizing: content-box;
+    margin-bottom: 5%;
+}
+
+.squareContent{
+    padding:3px;
+    }
+
+.squareHeading{
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+{% endblock style %}
+
+{% block content %}
+    <div>
+        <span>Welcome to my project portfolio</span>
+        <p>I don't know how I want to display my projects. Each one is so unique, I think they'll each
+        need their own distict module. I'm picturing like Hollywood Squares</p>
+        <p>I've got the flexbox set up for the squares, but now I'm stumped what I actually want in each one.
+        I think I should draw a picture for each, but I think I'll wait until I have a little bit more training
+        with that under my belt.</p>
+        <p>There are def issues with the headers. Also... just checked this page on mobile and it's not looking great :(</p>
+        <div class='hollywoodSquaresContainer'>
+            <div class='hollywoodSquare'><div class = 'squareContent'><span class = 'squareHeading'><a href='/finance/'>Finance Tools</a></span><br><ul><li>Budgetting</li><li>Tracking</li><li>Forecasting</li></ul></div></div>
+            <div class='hollywoodSquare'><div class = 'squareContent'><span class = 'squareHeading'><a href='https://www.digitdot.com' target='_blank'>DigitTop</a></span><br><br>The Digit Dot is a phone accessory a friend designed. I made a companion app that gives cool effects to gyroscopic inputs.</div></div>
+            <div class='hollywoodSquare'><div class = 'squareContent'><span class = 'squareHeading'><a href='/'>This Website</a></span><br><br>I know this is a lame example... since you're already here and all</div></div>
+            <div class='hollywoodSquare'><div class = 'squareContent'><span class = 'squareHeading'>VR Juggling Simulator</span><br><br>Okay... maybe this isn't fair to put up since it's still very much in progress, and had broken dependencies last I checked. But it's also fun! I'll upload a video</div></div>
+            <div class='hollywoodSquare'><div class = 'squareContent'><span class = 'squareHeading'><a href="{% static "Handbook.pdf" %}" target='_blank'>SciFi RPG</a></span><br><br>This is a fully original tabletop RPG system I'm developing. It needs a lot more playtesting, but it seems to work pretty well!</div></div>
+            <div class='hollywoodSquare'><div class = 'squareContent'><span class = 'squareHeading'>Robotic Vision System</span><br><br>I only really aded this to complete the grid. This is from college, and I don't even know if I have a video. I am really proud of this though. I really challeneged myself with this, and suceeded!</div></div>
+        </div>
+    </div>
+{% endblock content %}
